@@ -55,6 +55,9 @@ describe("Graph", () => {
         label="components"
         ${graph.subGraphs[1].nodes[0].id} [label="Button.tsx"]
       }
+
+      node_0 -> node_2
+      node_1 -> node_2
     }
     `;
 

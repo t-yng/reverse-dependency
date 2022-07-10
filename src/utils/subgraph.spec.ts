@@ -26,14 +26,33 @@ describe("Subgraph", () => {
     });
   });
 
+  it("子のSubGraphを含めた全てのNodeを返す", () => {
+    const subGraph = new SubGraph("pages/users/account.tsx");
+    subGraph.addSource("pages/users/[id].tsx");
+    subGraph.addSource("pages/index.tsx");
+
+    const nodes = subGraph.allNodes;
+    expect(nodes.length).toBe(3);
+  });
+
+  it("指定したパスのNodeを返す", () => {
+    const subGraph = new SubGraph("pages/users/account.tsx");
+    subGraph.addSource("pages/users/[id].tsx");
+    subGraph.addSource("pages/index.tsx");
+
+    const node = subGraph.getNode("pages/users/[id].tsx");
+    expect(node).not.toBe(null);
+    expect(node?.label).toBe("[id].tsx");
+  });
+
   it("DOT言語の文字列を出力", () => {
     const subGraph = new SubGraph("pages/users/account.tsx");
     subGraph.addSource("pages/users/[id].tsx");
 
     const expected = `
-    subgraph subgraph_0 {
+    subgraph cluster_0 {
       label="pages"
-      subgraph subgraph_1 {
+      subgraph cluster_1 {
         label="users"
         ${subGraph.subGraphs[0].nodes[0].id} [label="account.tsx"]
         ${subGraph.subGraphs[0].nodes[1].id} [label="[id].tsx"]

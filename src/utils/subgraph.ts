@@ -1,6 +1,6 @@
 import { Path } from "./path";
 
-interface DotNode {
+export interface DotNode {
   id: string;
   label: string;
 }
@@ -12,7 +12,7 @@ const generateNodeId = (() => {
 
 const generateSubGraphId = (() => {
   let id = 0;
-  return () => `subgraph_${id++}`;
+  return () => `cluster_${id++}`;
 })();
 
 export class SubGraph {
@@ -45,6 +45,40 @@ export class SubGraph {
 
   get subGraphs() {
     return this._subGraphs;
+  }
+
+  get allNodes(): DotNode[] {
+    const _nodes: DotNode[] = [];
+    _nodes.push(...this._nodes);
+    _nodes.push(
+      ...this._subGraphs.reduce<DotNode[]>((acc, subGraph) => {
+        acc.push(...subGraph.allNodes);
+        return acc;
+      }, [])
+    );
+
+    return _nodes;
+  }
+
+  public getNode(source: string): DotNode | null {
+    if (this.isSame(source)) {
+      const path = new Path(source);
+      const node = this._nodes.find((node) => node.label === path.base);
+      if (node != null) {
+        return node;
+      }
+      const subGraph = this._subGraphs.find(
+        (subGraph) => subGraph.label === path.directories[1]
+      );
+      if (subGraph != null) {
+        const nestedSource = [...path.directories.slice(1), path.base].join(
+          "/"
+        );
+        return subGraph.getNode(nestedSource);
+      }
+    }
+
+    return null;
   }
 
   public isSame(source: string) {

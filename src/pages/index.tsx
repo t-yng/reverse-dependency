@@ -1,8 +1,8 @@
 import type { GetServerSideProps, NextPage } from "next";
 import { useEffect } from "react";
-// import { graphviz } from "d3-graphviz";
 import { cruise, ICruiseResult } from "dependency-cruiser";
 import { Button } from "../components/Button";
+import { Graph } from "../utils/graph";
 
 // const dot = `
 // digraph G {
@@ -22,27 +22,56 @@ import { Button } from "../components/Button";
 // }
 // `;
 
+// const dot = `
+// digraph G {
+//   rankdir="LR"
+
+//   subgraph subgraph_0 {
+//     label="pages"
+
+//     subgraph cluster_1 {
+//       label="users"
+//       node_1 [label="pages/users/account.tsx"]
+//       node_2 [label="pages/users/[id].tsx"]
+//     }
+//   }
+
+//   subgraph cluster_1 {
+//     label="components"
+//     node_0 [label="components/Button.tsx"]
+//   }
+
+//   node_2 -> node_0
+//   node_1 -> node_0
+// }
+// `;
+
 const dot = `
 digraph G {
   rankdir="LR"
 
-  subgraph subgraph_0 {
-    label="pages"
+  subgraph cluster_0 {
+    label="src"
 
     subgraph cluster_1 {
-      label="users"
-      node_1 [label="pages/users/account.tsx"]
-      node_2 [label="pages/users/[id].tsx"]
+      label="components"
+      node_0 [label="Button.tsx"]
+    }
+
+    subgraph cluster_2 {
+      label="styles"
+      node_1 [label="App.css"]
+
+    }
+
+    subgraph cluster_3 {
+      label="utils"
+      node_2 [label="dot-graph.ts"]
+      node_3 [label="graph.ts"]
+      node_4 [label="subgraph.ts"]
+      node_5 [label="path.ts"]
     }
   }
-
-  subgraph cluster_1 {
-    label="components"
-    node_0 [label="components/Button.tsx"]
-  }
-
-  node_2 -> node_0
-  node_1 -> node_0
 }
 `;
 
@@ -65,54 +94,13 @@ type IndexProps = {
   modules: SerializableModule[];
 };
 
-const generateNodeId = (() => {
-  let num = 0;
-
-  return () => {
-    return `node_${num++}`;
-  };
-})();
-
 const generateDot = (modules: SerializableModule[]) => {
-  const nodes: any[] = [];
-
+  const graph = new Graph();
   for (const mod of modules) {
-    nodes.push({
-      id: generateNodeId(),
-      label: mod.source,
-      referenceNodes: mod.references.map((ref) => ({
-        id: generateNodeId(),
-        label: ref,
-      })),
-    });
+    graph.addModule(mod);
   }
 
-  console.log(nodes);
-
-  return `digraph G {
-    rankdir="LR"
-
-    {
-      ${nodes
-        .map((node) => {
-          return [
-            `${node.id} [label="${node.label}"]`,
-            ...node.referenceNodes.map(
-              (node: any) => `${node.id} [label="${node.label}"]`
-            ),
-          ].join("\n");
-        })
-        .join("\n")}
-    }
-
-    ${nodes
-      .map((node) => {
-        return node.referenceNodes
-          .map((ref: any) => `${ref.id} -> ${node.id}`)
-          .join("\n");
-      })
-      .join("\n")}
-  }`;
+  return graph.toDot();
 };
 
 const Index: NextPage<IndexProps> = ({ modules }) => {
@@ -127,15 +115,13 @@ const Index: NextPage<IndexProps> = ({ modules }) => {
         for (const node of Array.from(nodes)) {
           const clickListener = () => {
             const text = node.querySelector("text")?.textContent;
-            console.log(text);
           };
           node.addEventListener("click", clickListener);
           clickListeners[node.id] = clickListener;
         }
       };
 
-      // const dot = generateDot(modules);
-      // console.log(dot);
+      const dot = generateDot(modules);
       graphviz("#graph").renderDot(dot, onRender);
     })();
 
@@ -168,8 +154,13 @@ export const getServerSideProps: GetServerSideProps<IndexProps> = async () => {
   });
 
   for (const cruiseModule of (result.output as ICruiseResult).modules) {
-    if (cruiseModule.dependencies.length === 0) {
-      continue;
+    console.log(cruiseModule);
+
+    if (!modules.some((mod) => mod.source === cruiseModule.source)) {
+      modules.push({
+        source: cruiseModule.source,
+        references: new Set(),
+      });
     }
 
     for (const dependency of cruiseModule.dependencies) {
