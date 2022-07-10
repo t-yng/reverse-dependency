@@ -1,5 +1,4 @@
 import { describe, expect, it } from "vitest";
-import { Graph } from "./graph";
 import { SubGraph } from "./subgraph";
 
 describe("Subgraph", () => {
@@ -22,7 +21,7 @@ describe("Subgraph", () => {
     expect(subGraph.subGraphs.length).toBe(1);
     expect(subGraph.subGraphs[0].nodes.length).toBe(2);
     expect(subGraph.subGraphs[0].nodes[1]).toEqual({
-      id: "node_1",
+      id: expect.any(String),
       label: "[id].tsx",
     });
   });
@@ -36,14 +35,15 @@ describe("Subgraph", () => {
       label="pages"
       subgraph subgraph_1 {
         label="users"
-        node_0 [label="account.tsx"]
-        node_1 [label="[id].tsx"]
+        ${subGraph.subGraphs[0].nodes[0].id} [label="account.tsx"]
+        ${subGraph.subGraphs[0].nodes[1].id} [label="[id].tsx"]
       }
-    }
-    `;
+    }`;
 
     const dot = subGraph.toDot();
 
-    expect(dot.trimStart()).toBe(dot.trimStart());
+    expect(dot.trimStart().replaceAll("\n", "").replace(/\s/g, "")).toBe(
+      expected.trimStart().replaceAll("\n", "").replace(/\s/g, "")
+    );
   });
 });

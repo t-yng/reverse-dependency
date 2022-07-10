@@ -28,8 +28,7 @@ export class SubGraph {
     this._nodes = [];
     this._subGraphs = [];
 
-    const nestedSource = [...path.directories.slice(1), path.base].join("/");
-    this.addSource(nestedSource);
+    this.addSource(source);
   }
 
   get id() {
@@ -68,13 +67,13 @@ export class SubGraph {
     }
 
     for (const subGraph of this.subGraphs) {
-      if (subGraph.isSame(nestedSource)) {
+      if (subGraph.isSame(source)) {
         subGraph.addSource(nestedSource);
         return;
       }
     }
 
-    this.subGraphs.push(new SubGraph(nestedSource));
+    this.subGraphs.push(new SubGraph(source));
   }
 
   public addNode(file: string) {
@@ -86,14 +85,18 @@ export class SubGraph {
 
   public toDot(): string {
     return `
-      subgraph ${this._id} {
-        label="${this._label}"
-        ${this._subGraphs
-          .map((subGraph) => {
-            return subGraph.toDot();
-          })
-          .join("\n")}
-      }
-    `;
+    subgraph ${this._id} {
+      label="${this._label}"
+      ${this._nodes
+        .map((node) => {
+          return `${node.id} [label="${node.label}"]`;
+        })
+        .join("\n")}
+      ${this._subGraphs
+        .map((subGraph) => {
+          return subGraph.toDot();
+        })
+        .join("\n")}
+    }`;
   }
 }
