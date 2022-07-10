@@ -37,20 +37,7 @@ export class Graph {
     digraph G {
       rankdir="LR"
 
-      ${this._subGraphs.map((subGraph) => {})}
-      subgraph subgraph_0 {
-        label="pages"
-        subgraph subgraph_1 {
-          label="users"
-          node_0 [label="account.tsx"]
-          node_1 [label="[id].tsx"]
-        }
-      }
-
-      subgraph subgraph_1 {
-        label="components"
-        node_2 [label=""]
-      }
+      ${this._subGraphs.map((subGraph) => subGraph.toDot()).join("\n\n")}
     }
     `;
   }

@@ -33,32 +33,35 @@ describe("Graph", () => {
   });
 
   it("DOT言語のグラフ文字列を出力", () => {
-    const expected = `
-    digraph G {
-      rankdir="LR"
-
-      subgraph subgraph_0 {
-        label="pages"
-        subgraph subgraph_1 {
-          label="users"
-          node_0 [label="account.tsx"]
-          node_1 [label="[id].tsx"]
-        }
-      }
-
-      subgraph subgraph_1 {
-        label="components"
-        node_2 [label=""]
-      }
-    }
-    `;
-
     const graph = new Graph();
     graph.addModule(modules[0]);
     graph.addModule(modules[1]);
     graph.addModule(modules[2]);
+
+    const expected = `
+    digraph G {
+      rankdir="LR"
+
+      subgraph ${graph.subGraphs[0].id} {
+        label="pages"
+        subgraph ${graph.subGraphs[0].subGraphs[0].id} {
+          label="users"
+          ${graph.subGraphs[0].subGraphs[0].nodes[0].id} [label="account.tsx"]
+          ${graph.subGraphs[0].subGraphs[0].nodes[1].id} [label="[id].tsx"]
+        }
+      }
+
+      subgraph ${graph.subGraphs[1].id} {
+        label="components"
+        ${graph.subGraphs[1].nodes[0].id} [label="Button.tsx"]
+      }
+    }
+    `;
+
     const dot = graph.toDot();
 
-    expect(dot.trimStart()).toBe(expected.trimStart());
+    expect(dot.trimStart().replaceAll("\n", "").replace(/\s/g, "")).toBe(
+      expected.trimStart().replaceAll("\n", "").replace(/\s/g, "")
+    );
   });
 });
