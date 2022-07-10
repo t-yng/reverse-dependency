@@ -1,0 +1,7 @@
+#graph svg {
+  pointer-events: all;
+}
+
+#graph .node {
+  cursor: pointer;
+}
