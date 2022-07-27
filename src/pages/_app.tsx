@@ -3,12 +3,7 @@ import "../styles/App.css";
 import { Button } from "../components/Button";
 
 function MyApp({ Component, pageProps }: AppProps) {
-  return (
-    <>
-      <Button />
-      <Component {...pageProps} />
-    </>
-  );
+  return <Component {...pageProps} />;
 }
 
 export default MyApp;
