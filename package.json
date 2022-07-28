@@ -12,6 +12,7 @@
   "dependencies": {
     "@vanilla-extract/css": "^1.7.2",
     "@vanilla-extract/next-plugin": "^2.0.2",
+    "@vanilla-extract/vite-plugin": "^3.2.1",
     "d3-graphviz": "^4.1.1",
     "d3-selection": "^2.0.0",
     "dependency-cruiser": "^11.11.0",

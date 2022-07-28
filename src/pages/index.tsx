@@ -5,6 +5,7 @@ import { Graph } from "../utils/graph";
 import { generateSubsetModules } from "../utils/search";
 import { AutoSuggest } from "../components/AutoSuggest";
 import * as styles from "./index.css";
+import { FileTree } from "../components/FileTree";
 
 interface CruiserModule {
   source: string;
@@ -63,10 +64,11 @@ const Index: NextPage<IndexProps> = ({ modules }) => {
 
   return (
     <main className={styles.main}>
-      <AutoSuggest
+      {/* <AutoSuggest
         list={modules.map((mod) => mod.source)}
         onSelect={(text) => setSearchTarget(text)}
-      />
+      /> */}
+      <FileTree files={modules.map((mod) => mod.source)} />
       <div id="graph" style={{ textAlign: "center" }}></div>
     </main>
   );
