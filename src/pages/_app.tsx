@@ -1,6 +1,5 @@
 import type { AppProps } from "next/app";
-import "../styles/App.css";
-import { Button } from "../components/Button";
+import "sanitize.css";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return <Component {...pageProps} />;

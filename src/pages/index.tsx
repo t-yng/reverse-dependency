@@ -4,6 +4,7 @@ import { cruise, ICruiseResult } from "dependency-cruiser";
 import { Graph } from "../utils/graph";
 import { generateSubsetModules } from "../utils/search";
 import { AutoSuggest } from "../components/AutoSuggest";
+import * as styles from "./index.css";
 
 interface CruiserModule {
   source: string;
@@ -61,13 +62,13 @@ const Index: NextPage<IndexProps> = ({ modules }) => {
   }, [modules, searchTarget]);
 
   return (
-    <>
+    <main className={styles.main}>
       <AutoSuggest
         list={modules.map((mod) => mod.source)}
         onSelect={(text) => setSearchTarget(text)}
       />
       <div id="graph" style={{ textAlign: "center" }}></div>
-    </>
+    </main>
   );
 };
 
