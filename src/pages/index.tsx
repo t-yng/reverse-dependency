@@ -1,11 +1,9 @@
 import type { GetServerSideProps, NextPage } from "next";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { cruise, ICruiseResult } from "dependency-cruiser";
-import { Graph } from "../utils/graph";
-import { generateSubsetModules } from "../utils/search";
-import { AutoSuggest } from "../components/AutoSuggest";
 import * as styles from "./index.css";
 import { FileTree } from "../components/FileTree";
+import { Graph } from "../components/Graph/Graph";
 
 interface CruiserModule {
   source: string;
@@ -20,59 +18,16 @@ type IndexProps = {
   modules: Module[];
 };
 
-const generateDot = (modules: Module[]) => {
-  const graph = new Graph();
-  for (const mod of modules) {
-    graph.addModule(mod);
-  }
-
-  return graph.toDot();
-};
-
 const Index: NextPage<IndexProps> = ({ modules }) => {
   const [searchTarget, setSearchTarget] = useState("");
 
-  useEffect(() => {
-    const clickListeners: Record<string, EventListener> = {};
-
-    (async () => {
-      const { graphviz } = await import("d3-graphviz");
-
-      const onRender = () => {
-        const nodes = document.querySelectorAll(".node");
-        for (const node of Array.from(nodes)) {
-          const clickListener = () => {
-            const text = node.querySelector("text")?.textContent;
-          };
-          node.addEventListener("click", clickListener);
-          clickListeners[node.id] = clickListener;
-        }
-      };
-
-      const filteredModules = generateSubsetModules(modules, searchTarget);
-      const dot = generateDot(filteredModules);
-      graphviz("#graph").renderDot(dot, onRender);
-    })();
-
-    return () => {
-      const nodes = document.querySelectorAll(".node");
-      for (const node of Array.from(nodes)) {
-        node.removeEventListener("click", clickListeners[node.id]);
-      }
-    };
-  }, [modules, searchTarget]);
-
   return (
     <main className={styles.main}>
-      {/* <AutoSuggest
-        list={modules.map((mod) => mod.source)}
-        onSelect={(text) => setSearchTarget(text)}
-      /> */}
       <FileTree
         files={modules.map((mod) => mod.source)}
         onClickFile={setSearchTarget}
       />
-      <div id="graph" style={{ textAlign: "center" }}></div>
+      <Graph modules={modules} target={searchTarget} />
     </main>
   );
 };
