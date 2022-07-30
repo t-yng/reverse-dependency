@@ -1,10 +1,11 @@
 export interface DirectoryEntry {
   name: string;
+  source: string;
   entries?: DirectoryEntry[];
 }
 
 export class File implements DirectoryEntry {
-  constructor(readonly name: string) {}
+  constructor(readonly name: string, readonly source: string) {}
 }
 
 const isDirectory = (entry: DirectoryEntry): entry is Directory => {
@@ -17,10 +18,12 @@ const isFile = (entry: DirectoryEntry): entry is Directory => {
 
 export class Directory implements DirectoryEntry {
   readonly name: string;
+  readonly source: string;
   private _entries: DirectoryEntry[];
 
-  constructor(name: string) {
+  constructor(name: string, source: string) {
     this.name = name;
+    this.source = source;
     this._entries = [];
   }
 

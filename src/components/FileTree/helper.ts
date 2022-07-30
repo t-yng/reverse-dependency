@@ -3,7 +3,7 @@ import { Directory, File } from "./Directory";
 export const toDirectory = (files: string[]) => {
   if (files.length === 0) return null;
 
-  let rootDir: Directory = new Directory(files[0].split("/")[0]);
+  let rootDir: Directory = new Directory(files[0].split("/")[0], files[0]);
 
   for (const file of files) {
     const entries = file.split("/").slice(1);
@@ -13,7 +13,7 @@ export const toDirectory = (files: string[]) => {
       // }
 
       if (i === entries.length - 1) {
-        prevDir.addEntry(new File(entry));
+        prevDir.addEntry(new File(entry, file));
         return prevDir;
       }
 
@@ -21,7 +21,7 @@ export const toDirectory = (files: string[]) => {
       if (subDirectory != null) {
         return subDirectory;
       } else {
-        const dir = new Directory(entry);
+        const dir = new Directory(entry, file);
         prevDir.addEntry(dir);
         return dir;
       }

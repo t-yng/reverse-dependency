@@ -5,9 +5,10 @@ import { DirectoryEntry } from "./DirectoryEntry";
 
 type FileTreeProps = {
   files: string[];
+  onClickFile: (source: string) => void;
 };
 
-export const FileTree: FC<FileTreeProps> = ({ files }) => {
+export const FileTree: FC<FileTreeProps> = ({ files, onClickFile }) => {
   const rootDirectory = toDirectory(files);
 
   if (rootDirectory == null) {
@@ -16,7 +17,7 @@ export const FileTree: FC<FileTreeProps> = ({ files }) => {
 
   return (
     <div className={styles.root}>
-      <DirectoryEntry directory={rootDirectory} />
+      <DirectoryEntry directory={rootDirectory} onClickFile={onClickFile} />
     </div>
   );
 };

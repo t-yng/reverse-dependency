@@ -68,7 +68,10 @@ const Index: NextPage<IndexProps> = ({ modules }) => {
         list={modules.map((mod) => mod.source)}
         onSelect={(text) => setSearchTarget(text)}
       /> */}
-      <FileTree files={modules.map((mod) => mod.source)} />
+      <FileTree
+        files={modules.map((mod) => mod.source)}
+        onClickFile={setSearchTarget}
+      />
       <div id="graph" style={{ textAlign: "center" }}></div>
     </main>
   );
