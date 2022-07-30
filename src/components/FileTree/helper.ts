@@ -2,7 +2,6 @@ import { Directory, File } from "./Directory";
 
 export const toDirectory = (files: string[]) => {
   if (files.length === 0) return null;
-
   let rootDir: Directory = new Directory(files[0].split("/")[0], files[0]);
 
   for (const file of files) {
@@ -21,7 +20,13 @@ export const toDirectory = (files: string[]) => {
       if (subDirectory != null) {
         return subDirectory;
       } else {
-        const dir = new Directory(entry, file);
+        const dir = new Directory(
+          entry,
+          file
+            .split("/")
+            .slice(0, i + 2)
+            .join("/")
+        );
         prevDir.addEntry(dir);
         return dir;
       }

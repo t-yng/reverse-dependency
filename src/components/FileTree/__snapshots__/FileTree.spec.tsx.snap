@@ -6,44 +6,50 @@ exports[`FileTree > モジュールの一覧からファイルのツリー構造
     class="FileTree__13fxlic0"
   >
     <details
-      class="FileTree__13fxlic1"
+      class="DirectoryEntry__1ofdrcr2"
     >
       <summary
-        class="FileTree__13fxlic2"
+        class="DirectoryEntry__1ofdrcr3 DirectoryEntry__1ofdrcr0"
       >
         src
       </summary>
       <details
-        class="FileTree__13fxlic1"
+        class="DirectoryEntry__1ofdrcr2"
       >
         <summary
-          class="FileTree__13fxlic2"
+          class="DirectoryEntry__1ofdrcr3 DirectoryEntry__1ofdrcr0"
         >
           components
         </summary>
         <details
-          class="FileTree__13fxlic1"
+          class="DirectoryEntry__1ofdrcr2"
         >
           <summary
-            class="FileTree__13fxlic2"
+            class="DirectoryEntry__1ofdrcr3 DirectoryEntry__1ofdrcr0"
           >
             FileTree
           </summary>
           <ul
-            class="FileTree__13fxlic1"
+            class="DirectoryEntry__1ofdrcr2"
           >
-            <li>
+            <li
+              class="DirectoryEntry__1ofdrcr0"
+            >
               FileTree.tsx
             </li>
-            <li>
+            <li
+              class="DirectoryEntry__1ofdrcr0"
+            >
               index.ts
             </li>
           </ul>
         </details>
         <ul
-          class="FileTree__13fxlic1"
+          class="DirectoryEntry__1ofdrcr2"
         >
-          <li>
+          <li
+            class="DirectoryEntry__1ofdrcr0"
+          >
             Button.tsx
           </li>
         </ul>

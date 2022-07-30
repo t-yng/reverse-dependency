@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import * as styles from "./FileTree.css";
 import { toDirectory } from "./helper";
 import { DirectoryEntry } from "./DirectoryEntry";
@@ -10,6 +10,7 @@ type FileTreeProps = {
 
 export const FileTree: FC<FileTreeProps> = ({ files, onClickFile }) => {
   const rootDirectory = toDirectory(files);
+  const [selectedEntry, setSelectedEntry] = useState<string | null>(null);
 
   if (rootDirectory == null) {
     return null;
@@ -17,7 +18,17 @@ export const FileTree: FC<FileTreeProps> = ({ files, onClickFile }) => {
 
   return (
     <div className={styles.root}>
-      <DirectoryEntry directory={rootDirectory} onClickFile={onClickFile} />
+      <DirectoryEntry
+        directory={rootDirectory}
+        onClickFile={(source) => {
+          setSelectedEntry(source);
+          onClickFile(source);
+        }}
+        onClickDirectory={(source) => {
+          setSelectedEntry(source);
+        }}
+        selectedEntrySource={selectedEntry}
+      />
     </div>
   );
 };
