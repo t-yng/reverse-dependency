@@ -111,6 +111,11 @@ export class SubGraph {
   }
 
   public addNode(file: string) {
+    // NOTE: 既に追加済みの場合は追加しない
+    if (this.nodes.find((node) => node.label === file)) {
+      return;
+    }
+
     this.nodes.push({
       id: generateNodeId(),
       label: file,

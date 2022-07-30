@@ -72,6 +72,35 @@ describe("search", () => {
     ]);
   });
 
+  it("重複したモジュール返さない", () => {
+    const modules = [
+      {
+        source: "src/components/FileTree.tsx",
+        references: ["src/pages/index.tsx"],
+      },
+      {
+        source: "src/components/DirectoryEntry.tsx",
+        references: ["src/components/FileTree.tsx"],
+      },
+      {
+        source: "src/common.css.ts",
+        references: [
+          "src/components/FileTree.tsx",
+          "src/components/DirectoryEntry.tsx",
+        ],
+      },
+      {
+        source: "src/pages/index.tsx",
+        references: [],
+      },
+    ];
+
+    const subsetModules = generateSubsetModules(modules, "src/common.css.ts");
+
+    expect(subsetModules.length).toBe(4);
+    expect(subsetModules).toEqual(expect.arrayContaining(modules));
+  });
+
   it("指定したモジュールが一覧に含まれない場合は空配列を返す", () => {
     const subsetModules = generateSubsetModules(
       modules,
