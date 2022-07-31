@@ -35,13 +35,14 @@ const Index: NextPage<IndexProps> = ({ modules }) => {
 export const getServerSideProps: GetServerSideProps<IndexProps> = async () => {
   const cruiserModules: CruiserModule[] = [];
 
+  // TODO: ディレクトリのパスはCLIのオプションで指定可能（必須）にする
   const result = cruise([`${__dirname}/../../../src`], {
     combinedDependencies: true,
-    includeOnly: "src",
+    includeOnly: "src", // TODO: デフォルト値として利用、CLIのオプションで指定可能にする
     exclude: {
-      path: ["node_modules"],
+      path: ["node_modules", "spec"], // TODO: デフォルト値として利用、CLIのオプションで指定可能にする
     },
-    maxDepth: 10,
+    maxDepth: 10, // TODO: デフォルト値として利用、CLIのオプションで指定可能にする
   });
 
   for (const cruiseModule of (result.output as ICruiseResult).modules) {
