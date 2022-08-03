@@ -10,6 +10,9 @@ const nextConfig = {
     esmExternals: true,
   },
   pageExtensions: ["tsx"],
+  env: {
+    isDevelopment: process.env.NODE_ENV !== "production",
+  },
 };
 
 module.exports = withVanillaExtract(nextConfig);
