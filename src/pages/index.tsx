@@ -1,17 +1,12 @@
 import type { GetServerSideProps, NextPage } from "next";
 import { useState } from "react";
-import { cruise, ICruiseResult } from "dependency-cruiser";
 import * as styles from "./index.css";
 import { FileTree } from "../components/FileTree";
 import { Graph } from "../components/Graph/Graph";
 
-interface CruiserModule {
+type Module = {
   source: string;
-  references: Set<string>;
-}
-
-type Module = Omit<CruiserModule, "references"> & {
-  references: string[]; // JSONでシリアライズするために配列で保持する
+  references: string[];
 };
 
 type IndexProps = {
@@ -33,45 +28,8 @@ const Index: NextPage<IndexProps> = ({ modules }) => {
 };
 
 export const getServerSideProps: GetServerSideProps<IndexProps> = async () => {
-  const cruiserModules: CruiserModule[] = [];
-
-  // TODO: ディレクトリのパスはCLIのオプションで指定可能（必須）にする
-  const result = cruise([`${__dirname}/../../../src`], {
-    combinedDependencies: true,
-    includeOnly: "src", // TODO: デフォルト値として利用、CLIのオプションで指定可能にする
-    exclude: {
-      path: ["node_modules", "spec"], // TODO: デフォルト値として利用、CLIのオプションで指定可能にする
-    },
-    maxDepth: 10, // TODO: デフォルト値として利用、CLIのオプションで指定可能にする
-  });
-
-  for (const cruiseModule of (result.output as ICruiseResult).modules) {
-    if (!cruiserModules.some((mod) => mod.source === cruiseModule.source)) {
-      cruiserModules.push({
-        source: cruiseModule.source,
-        references: new Set(),
-      });
-    }
-
-    for (const dependency of cruiseModule.dependencies) {
-      const mod = cruiserModules.find(
-        (mod) => mod.source === dependency.resolved
-      ) ?? {
-        source: dependency.resolved,
-        references: new Set(),
-      };
-      mod.references.add(cruiseModule.source);
-
-      if (!cruiserModules.some((mod) => mod.source === dependency.resolved)) {
-        cruiserModules.push(mod);
-      }
-    }
-  }
-
-  const modules: Module[] = cruiserModules.map((mod) => ({
-    source: mod.source,
-    references: Array.from(mod.references),
-  }));
+  const res = await fetch("http://localhost:3000/api/modules/scan");
+  const { modules } = await res.json();
 
   return {
     props: {

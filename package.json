@@ -9,7 +9,7 @@
     "access": "public"
   },
   "scripts": {
-    "dev": "next dev",
+    "dev": "nodemon",
     "build": "next build && tsc -P tsconfig.server.json && cp node_modules/@hpcc-js/wasm/dist/graphvizlib.wasm .next/static/chunks/",
     "start": "next start",
     "lint": "next lint",
@@ -24,6 +24,7 @@
     "d3-graphviz": "^4.1.1",
     "d3-selection": "^2.0.0",
     "dependency-cruiser": "^11.11.0",
+    "express": "^4.18.1",
     "next": "12.2.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
@@ -35,6 +36,7 @@
     "@testing-library/user-event": "^14.3.0",
     "@types/d3-graphviz": "^2.6.7",
     "@types/d3-selection": "^2.0.0",
+    "@types/express": "^4.17.13",
     "@types/node": "18.0.3",
     "@types/react": "18.0.15",
     "@types/react-dom": "18.0.6",
@@ -42,6 +44,8 @@
     "eslint": "8.19.0",
     "eslint-config-next": "12.2.2",
     "jsdom": "^20.0.0",
+    "nodemon": "^2.0.19",
+    "ts-node": "^10.9.1",
     "typescript": "4.7.4",
     "vitest": "^0.18.0"
   }
