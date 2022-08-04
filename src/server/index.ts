@@ -23,6 +23,9 @@ export const createServer = async ({
   }
 
   server.use("/api/modules", createModulesRouter({ source }));
+  server.get("/_next/static/chunks/graphvizlib.wasm", (_req, res) => {
+    return res.redirect("/graphvizlib.wasm");
+  });
   server.all("*", (req, res) => {
     return handle(req, res);
   });
