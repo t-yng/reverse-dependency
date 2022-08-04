@@ -10,11 +10,12 @@
   },
   "scripts": {
     "dev": "nodemon",
-    "build": "next build && tsc -P tsconfig.server.json && cp node_modules/@hpcc-js/wasm/dist/graphvizlib.wasm .next/static/chunks/",
+    "build": "next build && tsc -P tsconfig.server.json",
     "start": "next start",
     "lint": "next lint",
     "test": "vitest --run",
-    "prepublishOnly": "NODE_ENV=production yarn build"
+    "prepublishOnly": "NODE_ENV=production yarn build",
+    "postinstall": "cp node_modules/@hpcc-js/wasm/dist/graphvizlib.wasm public/"
   },
   "dependencies": {
     "@vanilla-extract/css": "^1.7.2",
