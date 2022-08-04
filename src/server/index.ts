@@ -1,14 +1,15 @@
 import next from "next";
 import express from "express";
-import modules from "./api/modules";
+import { createModulesRouter } from "./api/modules";
 import type { Express } from "express";
 
 export const createServer = async ({
   dev,
+  source,
 }: {
   dev: boolean;
+  source: string;
 }): Promise<Express> => {
-  console.log(`dev: ${dev}`);
   const app = next({ dev });
   const handle = app.getRequestHandler();
 
@@ -21,8 +22,7 @@ export const createServer = async ({
     process.exit(1);
   }
 
-  server.use("/api/modules", modules);
-
+  server.use("/api/modules", createModulesRouter({ source }));
   server.all("*", (req, res) => {
     return handle(req, res);
   });
