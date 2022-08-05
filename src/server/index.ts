@@ -1,3 +1,4 @@
+import path from "path";
 import next from "next";
 import express from "express";
 import { createModulesRouter } from "./api/modules";
@@ -12,7 +13,8 @@ export const createServer = async ({
   dev,
   source,
 }: ServerOptions): Promise<Express> => {
-  const app = next({ dev });
+  const projectDir = path.join(__dirname, "../../"); // パッケージがインストールされた場所をプロジェクトディレクトリとする
+  const app = next({ dev, dir: projectDir });
   const handle = app.getRequestHandler();
 
   const server = express();
