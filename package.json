@@ -15,7 +15,7 @@
     "lint": "next lint",
     "test": "vitest --run",
     "prepublishOnly": "NODE_ENV=production yarn build",
-    "postinstall": "cp node_modules/@hpcc-js/wasm/dist/graphvizlib.wasm public/"
+    "prepare": "cp node_modules/@hpcc-js/wasm/dist/graphvizlib.wasm public/"
   },
   "dependencies": {
     "@vanilla-extract/css": "^1.7.2",
