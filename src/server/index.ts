@@ -3,13 +3,15 @@ import express from "express";
 import { createModulesRouter } from "./api/modules";
 import type { Express } from "express";
 
+type ServerOptions = {
+  dev: boolean;
+  source: string;
+};
+
 export const createServer = async ({
   dev,
   source,
-}: {
-  dev: boolean;
-  source: string;
-}): Promise<Express> => {
+}: ServerOptions): Promise<Express> => {
   const app = next({ dev });
   const handle = app.getRequestHandler();
 

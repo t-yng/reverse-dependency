@@ -17,6 +17,8 @@ export const createModulesRouter = ({ source }: { source: string }) => {
   router.get("/scan", (_req, res) => {
     const cruiserModules: CruiserModule[] = [];
 
+    // NOTE: 親ディレクトリを指定した場合にdependency-cruiserでバグが発生する
+    // @see https://github.com/sverweij/dependency-cruiser/issues/575#issuecomment-1082136809
     const target = path.join(process.cwd(), source);
     // TODO: ディレクトリのパスはCLIのオプションで指定可能（必須）にする
     const result = cruise([target], {
