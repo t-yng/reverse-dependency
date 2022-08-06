@@ -11,7 +11,19 @@ type Module = Omit<CruiserModule, "references"> & {
   references: string[]; // JSONでシリアライズするために配列で保持する
 };
 
-export const createModulesRouter = ({ source }: { source: string }) => {
+export type ScanModulesOptions = {
+  source: string;
+  includeOnly?: string | string[];
+  exclude?: string | string[];
+  maxDepth?: number;
+};
+
+export const createModulesRouter = ({
+  source,
+  includeOnly,
+  exclude,
+  maxDepth,
+}: ScanModulesOptions) => {
   const router = express.Router();
 
   router.get("/scan", (_req, res) => {
@@ -20,14 +32,13 @@ export const createModulesRouter = ({ source }: { source: string }) => {
     // NOTE: 親ディレクトリを指定した場合にdependency-cruiserでバグが発生する
     // @see https://github.com/sverweij/dependency-cruiser/issues/575#issuecomment-1082136809
     const target = path.join(process.cwd(), source);
-    // TODO: ディレクトリのパスはCLIのオプションで指定可能（必須）にする
     const result = cruise([target], {
       combinedDependencies: true,
-      includeOnly: "src", // TODO: デフォルト値として利用、CLIのオプションで指定可能にする
+      includeOnly: includeOnly,
       exclude: {
-        path: ["node_modules", "spec"], // TODO: デフォルト値として利用、CLIのオプションで指定可能にする
+        path: exclude,
       },
-      maxDepth: 10, // TODO: デフォルト値として利用、CLIのオプションで指定可能にする
+      maxDepth: maxDepth,
     });
 
     for (const cruiseModule of (result.output as ICruiseResult).modules) {

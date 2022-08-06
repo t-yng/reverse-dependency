@@ -1,17 +1,18 @@
 import { createServer } from "../server";
-import { cliOptions } from "./options";
+import { getOptions } from "./options";
 
-const port = parseInt(process.env.PORT || "3000", 10);
 const dev = process.env.production
   ? false
   : process.env.NODE_ENV !== "production";
 
-const options = cliOptions();
+const options = getOptions();
 
-createServer({ dev, source: options.source }).then((server) => {
-  server.listen(port, () => {
+console.log(options);
+
+createServer({ dev, scanModulesOptions: options }).then((server) => {
+  server.listen(options.port, () => {
     console.log(
-      `> Server listening at http://localhost:${port} as ${
+      `> Server listening at http://localhost:${options.port} as ${
         dev ? "development" : "production"
       }`
     );
