@@ -1,4 +1,4 @@
-import { FC, useEffect } from "react";
+import { FC, useEffect, useRef } from "react";
 import { Graph as GraphModel, Module } from "../../utils/graph";
 import { generateSubsetModules } from "../../utils/search";
 import * as styles from "./Graph.css";
@@ -18,6 +18,8 @@ type GraphProps = {
 };
 
 export const Graph: FC<GraphProps> = ({ modules, target }) => {
+  const ref = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     const clickListeners: Record<string, EventListener> = {};
 
@@ -37,8 +39,15 @@ export const Graph: FC<GraphProps> = ({ modules, target }) => {
 
       const filteredModules = generateSubsetModules(modules, target);
       const dot = generateDot(filteredModules);
+
+      const width = ref.current != null ? ref.current.clientWidth : undefined;
+      const height = ref.current != null ? ref.current.clientHeight : undefined;
+
       graphviz("#graph", {
-        zoom: false,
+        zoom: true,
+        fit: true,
+        width,
+        height,
       }).renderDot(dot, onRender);
     })();
 
@@ -50,5 +59,5 @@ export const Graph: FC<GraphProps> = ({ modules, target }) => {
     };
   }, [modules, target]);
 
-  return <div id="graph" className={styles.graph} />;
+  return <div id="graph" className={styles.graph} ref={ref} />;
 };
