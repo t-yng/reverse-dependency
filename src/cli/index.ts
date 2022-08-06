@@ -2,7 +2,9 @@ import { createServer } from "../server";
 import { cliOptions } from "./options";
 
 const port = parseInt(process.env.PORT || "3000", 10);
-const dev = process.env.NODE_ENV !== "production";
+const dev = process.env.production
+  ? false
+  : process.env.NODE_ENV !== "production";
 
 const options = cliOptions();
 

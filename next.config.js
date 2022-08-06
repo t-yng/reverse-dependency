@@ -11,7 +11,7 @@ const nextConfig = {
   },
   pageExtensions: ["tsx"],
   env: {
-    isDevelopment: process.env.NODE_ENV !== "production",
+    production: process.env.NODE_ENV === "production",
   },
 };
 
