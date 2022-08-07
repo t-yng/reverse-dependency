@@ -1,6 +1,6 @@
 # reverse-dependency
 
-![https://github.com/t-yng/reverse-dependency/blob/main/docs/reverse-dependency.png]
+![reverse-dependency screenshot](https://github.com/t-yng/reverse-dependency/blob/main/docs/reverse-dependency.png)
 
 ## Installation
 ```sh
