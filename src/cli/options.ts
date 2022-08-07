@@ -28,7 +28,7 @@ export const getOptions = (): CliOptions => {
     )
     .option(
       "--include-only <expressions...>",
-      "included files expression in result (default undefined)",
+      "included files expression in result",
       defaultOptions.includeOnly
     )
     .option(
@@ -38,7 +38,7 @@ export const getOptions = (): CliOptions => {
     )
     .option<number>(
       "--max-depth <depth>",
-      "the maximum depth to scan (default 10)",
+      "the maximum depth to scan dependency (default 10)",
       toNumber,
       defaultOptions.maxDepth
     );
