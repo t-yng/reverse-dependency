@@ -1,6 +1,6 @@
 {
   "name": "@t-yng/reverse-dependency",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "license": "MIT",
   "bin": {
     "reverse-dependency": "bin/reverse-dependency.js"
@@ -14,7 +14,7 @@
     "start": "next start",
     "lint": "next lint",
     "test": "vitest --run",
-    "prepublishOnly": "NODE_ENV=production yarn build",
+    "prepublishOnly": "yarn build",
     "prepare": "cp node_modules/@hpcc-js/wasm/dist/graphvizlib.wasm public/"
   },
   "dependencies": {
