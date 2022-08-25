@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { SubGraph } from "./subgraph";
 
 describe("Subgraph", () => {
@@ -50,9 +50,9 @@ describe("Subgraph", () => {
     subGraph.addSource("pages/users/[id].tsx");
 
     const expected = `
-    subgraph cluster_0 {
+    subgraph ${subGraph.id} {
       label="pages"
-      subgraph cluster_1 {
+      subgraph ${subGraph.subGraphs[0].id} {
         label="users"
         ${subGraph.subGraphs[0].nodes[0].id} [label="account.tsx"]
         ${subGraph.subGraphs[0].nodes[1].id} [label="[id].tsx"]

@@ -38,6 +38,10 @@ describe("Graph", () => {
     graph.addModule(modules[1]);
     graph.addModule(modules[2]);
 
+    const node_0 = graph.subGraphs[0].subGraphs[0].nodes[0];
+    const node_1 = graph.subGraphs[0].subGraphs[0].nodes[1];
+    const node_2 = graph.subGraphs[1].nodes[0];
+
     const expected = `
     digraph G {
       rankdir="LR"
@@ -56,8 +60,8 @@ describe("Graph", () => {
         ${graph.subGraphs[1].nodes[0].id} [label="Button.tsx"]
       }
 
-      node_0 -> node_2
-      node_1 -> node_2
+      ${node_0.id} -> ${node_2.id}
+      ${node_1.id} -> ${node_2.id}
     }
     `;
 
