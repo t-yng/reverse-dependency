@@ -1,6 +1,6 @@
 {
   "name": "@t-yng/reverse-dependency",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "license": "MIT",
   "bin": {
     "reverse-dependency": "bin/reverse-dependency.js"
