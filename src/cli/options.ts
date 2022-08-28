@@ -5,6 +5,7 @@ const defaultOptions = {
   includeOnly: undefined,
   exclude: ["node_modules", "spec", "test"],
   maxDepth: 10,
+  tsConfig: "tsconfig.json",
 };
 
 export type CliOptions = {
@@ -13,6 +14,7 @@ export type CliOptions = {
   includeOnly?: string[];
   exclude?: string[];
   maxDepth?: number;
+  tsConfig?: string;
 };
 
 const toNumber = (value: string) => Number(value);
@@ -22,7 +24,7 @@ export const getOptions = (): CliOptions => {
     .requiredOption("-s, --source <source>", "path of root directory to scan")
     .option<number>(
       "-p, --port <number>",
-      "sever port number (default 3000)",
+      "sever port number (default: 3000)",
       toNumber,
       defaultOptions.port
     )
@@ -33,14 +35,19 @@ export const getOptions = (): CliOptions => {
     )
     .option(
       "--exclude <expressions...>",
-      "excluded files expression from result (default node_modules test spec)",
+      "excluded files expression from result (default: node_modules test spec)",
       defaultOptions.exclude
     )
     .option<number>(
       "--max-depth <depth>",
-      "the maximum depth to scan dependency (default 10)",
+      "the maximum depth to scan dependency (default: 10)",
       toNumber,
       defaultOptions.maxDepth
+    )
+    .option(
+      "--ts-config <file>",
+      "use a TypeScript configuration (default: tsconfig.json)",
+      defaultOptions.tsConfig
     );
 
   program.parse(process.argv);

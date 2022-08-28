@@ -1,6 +1,9 @@
 import express from "express";
 import path from "path";
-import { cruise, ICruiseResult } from "dependency-cruiser";
+import { cruise, ICruiseOptions, ICruiseResult } from "dependency-cruiser";
+// @ts-ignore
+import extractTsConfig from "../../../node_modules/dependency-cruiser/src/config-utl/extract-ts-config";
+import fs from "fs";
 
 interface CruiserModule {
   source: string;
@@ -16,6 +19,16 @@ export type ScanModulesOptions = {
   includeOnly?: string | string[];
   exclude?: string | string[];
   maxDepth?: number;
+  tsConfig?: string; // e.g: tsconfig.json
+};
+
+const loadTsConfig = (tsConfigFileName: string) => {
+  let tsConfig = undefined;
+  if (fs.existsSync(path.join(process.cwd(), tsConfigFileName))) {
+    tsConfig = extractTsConfig(tsConfigFileName);
+  }
+
+  return tsConfig;
 };
 
 export const createModulesRouter = ({
@@ -23,23 +36,39 @@ export const createModulesRouter = ({
   includeOnly,
   exclude,
   maxDepth,
+  tsConfig: tsConfigFileName,
 }: ScanModulesOptions) => {
   const router = express.Router();
 
   router.get("/scan", (_req, res) => {
     const cruiserModules: CruiserModule[] = [];
+    const tsConfig = tsConfigFileName
+      ? loadTsConfig(tsConfigFileName)
+      : undefined;
 
-    // NOTE: 親ディレクトリを指定した場合にdependency-cruiserでバグが発生する
-    // @see https://github.com/sverweij/dependency-cruiser/issues/575#issuecomment-1082136809
-    const target = path.join(process.cwd(), source);
-    const result = cruise([target], {
-      combinedDependencies: true,
+    const cruiseOptions: ICruiseOptions = {
       includeOnly: includeOnly,
       exclude: {
         path: exclude,
       },
       maxDepth: maxDepth,
-    });
+      // NOTE: dependency-cruiser does not read tsConfig if options.tsConfig is not set
+      // @see: https://github.com/sverweij/dependency-cruiser/blob/d2ab3deed0d0bd2bcdb7b9a9f2198f2ecaca8c34/src/main/resolve-options/normalize.js#L89
+      ruleSet: {
+        // @ts-ignore
+        options: {
+          tsConfig:
+            tsConfigFileName && tsConfig
+              ? { fileName: tsConfigFileName }
+              : undefined,
+        },
+      },
+    };
+
+    // NOTE: 親ディレクトリを指定した場合にdependency-cruiserでバグが発生する
+    // @see https://github.com/sverweij/dependency-cruiser/issues/575#issuecomment-1082136809
+    const target = path.join(process.cwd(), source);
+    const result = cruise([target], cruiseOptions, undefined, tsConfig);
 
     for (const cruiseModule of (result.output as ICruiseResult).modules) {
       if (!cruiserModules.some((mod) => mod.source === cruiseModule.source)) {
