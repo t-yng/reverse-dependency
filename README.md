@@ -28,6 +28,7 @@ $ reverse-dependency -s ./src
 |--include-only|||included files expression in result|
 |--exclude||node_modules test spec|excluded files expression from result|
 |--max-depth||10|the maximum depth to scan dependency|
+|--ts-config||tsconfig.json|TypeScript configuration file|
 
 ### Example
 
